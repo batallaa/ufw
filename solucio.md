@@ -136,6 +136,8 @@ sudo ufw delete [Numero]
 
 ## Activitats UFW
 
+(Activitats fetes en terminal ssh)
+
 ## 1. Comprova l’estat del firewall i si cal habilita’l
 
 Primer comprovem l’estat del firewall:
@@ -144,11 +146,15 @@ Primer comprovem l’estat del firewall:
 sudo ufw status verbose
 ```
 
+![alt text](img/image-12.png)
+
 Si el firewall està inactiu (`inactive`), l’habilitem amb:
 
 ```bash
 sudo ufw enable
 ```
+
+![alt text](img/image-13.png)
 
 Tornem a comprovar l’estat:
 
@@ -156,11 +162,7 @@ Tornem a comprovar l’estat:
 sudo ufw status verbose
 ```
 
-Sortida esperada:
-
-```bash
-Status: active
-```
+![alt text](img/image-14.png)
 
 ---
 
@@ -172,17 +174,7 @@ Mostrem totes les regles definides:
 sudo ufw status numbered
 ```
 
-Les regles per defecte solen ser:
-
-```bash
-Default: deny (incoming), allow (outgoing), disabled (routed)
-```
-
-Això significa:
-
-- Es deneguen connexions entrants
-- Es permeten connexions sortints
-- El trànsit reenviat està deshabilitat
+![alt text](img/image-15.png)
 
 ### Eliminar regles definides
 
@@ -194,12 +186,7 @@ Primer consultem els números:
 sudo ufw status numbered
 ```
 
-Exemple:
-
-```bash
-[1] 22/tcp ALLOW IN Anywhere
-[2] Nginx HTTPS ALLOW IN Anywhere
-```
+![alt text](img/image-16.png)
 
 Eliminem les regles:
 
@@ -208,11 +195,15 @@ sudo ufw delete 1
 sudo ufw delete 2
 ```
 
+![alt text](img/image-17.png)
+
 Comprovem de nou:
 
 ```bash
 sudo ufw status numbered
 ```
+
+![alt text](img/image-18.png)
 
 ---
 
@@ -224,31 +215,23 @@ Configurem la política per defecte d’entrada:
 sudo ufw default deny incoming
 ```
 
+![alt text](img/image-19.png)
+
 Comprovem-ho:
 
 ```bash
 sudo ufw status verbose
 ```
 
-Resultat esperat:
-
-```bash
-Default: deny (incoming)
-```
+![alt text](img/image-20.png)
 
 Ara intentem connectar-nos via SSH des de l’amfitrió:
 
 ```bash
-ssh usuari@IP_MAQUINA
+ssh usuari@192.168.56.102
 ```
 
-La connexió fallarà perquè el port 22 no està permès.
-
-Exemple d’error:
-
-```bash
-Connection refused
-```
+![alt text](img/image-21.png)
 
 ---
 
@@ -260,11 +243,15 @@ Configurem el trànsit de sortida:
 sudo ufw default deny outgoing
 ```
 
+![alt text](img/image-22.png)
+
 Comprovem l’estat:
 
 ```bash
 sudo ufw status verbose
 ```
+
+![alt text](img/image-23.png)
 
 Ara provem de fer ping a Google:
 
@@ -272,7 +259,7 @@ Ara provem de fer ping a Google:
 ping google.com
 ```
 
-El ping no funcionarà perquè el trànsit de sortida està bloquejat.
+![alt text](img/image-24.png)
 
 ---
 
@@ -286,11 +273,15 @@ Permetem el trànsit de sortida:
 sudo ufw default allow outgoing
 ```
 
+![alt text](img/image-25.png)
+
 Comprovem-ho:
 
 ```bash
 sudo ufw status verbose
 ```
+
+![alt text](img/image-26.png)
 
 Provem de nou el ping:
 
@@ -298,13 +289,7 @@ Provem de nou el ping:
 ping google.com
 ```
 
-Ara el ping hauria de respondre correctament.
-
-Exemple:
-
-```bash
-64 bytes from ...
-```
+![alt text](img/image-27.png)
 
 ---
 
@@ -316,33 +301,15 @@ Creem la regla:
 sudo ufw deny out to capgros.elnacional.cat
 ```
 
+![alt text](img/image-28.png)
+
 Si no funciona per DNS, primer obtenim la IP:
 
 ```bash
 ping capgros.elnacional.cat
 ```
 
-Exemple:
-
-```bash
-capgros.elnacional.cat (34.xxx.xxx.xxx)
-```
-
-I bloquegem la IP:
-
-```bash
-sudo ufw deny out to 34.xxx.xxx.xxx
-```
-
-Comprovem la connexió:
-
-```bash
-ping capgros.elnacional.cat
-```
-
-o bé accedint des del navegador.
-
-La connexió hauria de quedar bloquejada.
+![alt text](img/image-29.png)
 
 ---
 
@@ -354,19 +321,21 @@ Permetem només l’accés HTTP des de l’amfitrió:
 sudo ufw allow from 192.168.56.1 to any port 80 proto tcp
 ```
 
+![alt text](img/image-30.png)
+
 Comprovem les regles:
 
 ```bash
 sudo ufw status numbered
 ```
 
-Des de l’amfitrió obrim el navegador:
+![alt text](img/image-31.png)
 
-```text
-http://IP_DE_LA_MAQUINA
-```
+Des de l’amfitrió obrim el navegador i introduïm l'IP
 
 Hauria d’aparèixer la pàgina per defecte de Nginx.
+
+![alt text](img/image-32.png)
 
 ---
 
@@ -378,14 +347,7 @@ Finalment mostrem totes les regles configurades:
 sudo ufw status numbered
 ```
 
-Exemple de resultat:
-
-```bash
-Status: active
-
-[1] 80/tcp ALLOW IN 192.168.56.1
-[2] Anywhere DENY OUT capgros.elnacional.cat
-```
+![alt text](img/image-33.png)
 
 També podem veure informació detallada:
 
@@ -393,3 +355,4 @@ També podem veure informació detallada:
 sudo ufw status verbose
 ```
 
+![alt text](img/image-34.png)
